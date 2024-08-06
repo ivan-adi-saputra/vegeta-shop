@@ -16,16 +16,21 @@ function SignUpForm() {
       <div className="w-[100%] text-3xl font-semibold tracking-widest mb-2 text-center">
         Buat akun baru
       </div>
-      <Input
-        className="w-[100%] p-4 rounded-sm"
-        type="text"
-        placeholder="Nama Lengkap"
-      />
-      <Input
-        className="w-[100%] p-4 rounded-sm"
-        type="text"
-        placeholder="Email"
-      />
+      <div className="w-[100%] relative">
+        <Input
+          className="w-[100%] p-4 rounded-sm"
+          type="text"
+          placeholder="Nama Lengkap"
+        />
+      </div>
+
+      <div className="w-[100%] relative">
+        <Input
+          className="w-[100%] p-4 rounded-sm"
+          type="text"
+          placeholder="Email"
+        />
+      </div>
 
       <div className="w-[100%] relative">
         <Input

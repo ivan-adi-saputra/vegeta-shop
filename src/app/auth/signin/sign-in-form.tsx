@@ -17,11 +17,13 @@ function SignInForm() {
       <div className="w-[100%] text-3xl font-semibold tracking-widest mb-2 text-center">
         Masuk akun anda
       </div>
-      <Input
-        className="w-[100%] p-4 rounded-sm"
-        type="text"
-        placeholder="Email"
-      />
+      <div className="w-[100%] relative">
+        <Input
+          className="w-[100%] p-4 rounded-sm"
+          type="text"
+          placeholder="Email"
+        />
+      </div>
       <div className="w-[100%] relative">
         <Input
           className="w-[100%] p-4 rounded-sm"
