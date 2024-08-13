@@ -78,7 +78,7 @@ function SignInForm() {
       </div>
       <div className="w-[100%] relative">
         <Input
-          className="w-[100%] p-4 rounded-sm"
+          className="w-[100%]"
           type="text"
           placeholder="Email"
           {...register("email")}
@@ -87,7 +87,7 @@ function SignInForm() {
       </div>
       <div className="w-[100%] relative">
         <Input
-          className="w-[100%] p-4 rounded-sm"
+          className="w-[100%]"
           type={showPassword ? "text" : "password"}
           placeholder="Kata Sandi"
           suffix="Eye"
