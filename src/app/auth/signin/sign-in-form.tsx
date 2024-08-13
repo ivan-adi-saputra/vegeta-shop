@@ -4,11 +4,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { hover } from "@/lib/hover";
 import { cn } from "@/lib/utils";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { signIn } from "next-auth/react";
+import { useToast } from "@/components/ui/use-toast";
 
 type userAuthForm = {
   email: string;
@@ -30,6 +32,8 @@ const schema = yup
 
 function SignInForm() {
   const [showPassword, setShowPassword] = useState(false);
+  const params = useSearchParams();
+  const { toast } = useToast();
 
   const {
     handleSubmit,
@@ -41,8 +45,27 @@ function SignInForm() {
 
   const router = useRouter();
 
-  const onSubmit = (data: userAuthForm) => {
-    console.log(data);
+  const onSubmit = async (data: userAuthForm) => {
+    try {
+      const user = await signIn("credentials", {
+        email: data.email,
+        password: data.password,
+        callbackUrl: params.get("callbackUrl") || "/",
+        redirect: false,
+      });
+
+      if (!user?.error) {
+        router.push("/");
+      } else {
+        toast({
+          title: "Gagal Masuk",
+          description: "Cek kembali email dan password",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
