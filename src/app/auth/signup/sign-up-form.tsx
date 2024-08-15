@@ -8,6 +8,10 @@ import { cn } from "@/lib/utils";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { useRegisterMutation } from "@/services/auth";
+import { useRouter, useSearchParams } from "next/navigation";
+import { signIn } from "next-auth/react";
+import { useToast } from "@/components/ui/use-toast";
 
 type userAuthForm = {
   email: string;
@@ -39,6 +43,10 @@ function SignUpForm() {
   const [showConfirmationPassword, setShowConfirmationPassword] =
     useState(false);
 
+  const params = useSearchParams();
+  const { toast } = useToast();
+  const router = useRouter();
+
   const {
     handleSubmit,
     register,
@@ -47,8 +55,32 @@ function SignUpForm() {
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = (data: userAuthForm) => {
-    console.log(data);
+  const [registerMutation] = useRegisterMutation();
+
+  const onSubmit = async (data: userAuthForm) => {
+    try {
+      const res = await registerMutation(data).unwrap(); // akan mengembalikan nilai yang berhasil dari promise. Ini adalah data yang diresolusikan dari permintaan
+
+      console.log('res', res)
+      if (res.success) {
+        const user = await signIn("credentials", {
+          email: data.email,
+          password: data.password,
+          callbackUrl: params.get("callbackUrl") || "/",
+          redirect: false,
+        });
+
+        router.push(user?.url || "/");
+      } else {
+        toast({
+          title: "Gagal Masuk",
+          description: "Cek kembali email dan password",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
