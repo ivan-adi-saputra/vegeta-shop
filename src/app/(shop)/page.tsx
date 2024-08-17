@@ -15,7 +15,8 @@ import ImageBanner from "@/assets/images/image-banner.png";
 import { useGetAllProductQuery } from "@/services/product";
 
 export default function Home() {
-  const { data, isLoading } = useGetAllProductQuery();
+  const page = undefined
+  const { data, isLoading } = useGetAllProductQuery({page});
 
   return (
     <main className="flex flex-col w-full min-h-screen items-center pb-8">
@@ -42,7 +43,7 @@ export default function Home() {
           </div>
           <ProductShowcase
             gridConfig={"grid-cols-4"}
-            products={Array.isArray(data?.data) ? data.data.slice(0, 4) : []}
+            products={data?.data?.data?.slice(0, 4) || []}
             isLoading={isLoading}
           />
         </div>
