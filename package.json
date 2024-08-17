@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "seed": "ts-node prisma/seed.ts"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.4.2",
@@ -30,6 +31,7 @@
     "clsx": "^2.0.0",
     "eslint": "8.46.0",
     "eslint-config-next": "13.4.12",
+    "esm": "^3.2.25",
     "lucide-react": "^0.263.1",
     "next": "13.4.12",
     "next-auth": "^4.24.7",
@@ -50,6 +52,7 @@
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
-    "prisma": "^5.18.0"
+    "prisma": "^5.18.0",
+    "ts-node": "^10.9.2"
   }
 }

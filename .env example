@@ -9,3 +9,5 @@
 # localhost:3306 : port default
 # vegeta: table name
 DATABASE_URL="mysql://root:@localhost:3306/vegeta"
+NEXTAUTH_SECRET="VEGETA_SECRET"
+NEXTAUTH_URL="http://localhost:3000"
