@@ -11,6 +11,7 @@ interface ProductResponse extends BaseResponse {
 
 interface ProductParams {
   page?: string | undefined;
+  category?: string | undefined;
 }
 
 export const productApi = createApi({
@@ -21,10 +22,11 @@ export const productApi = createApi({
   tagTypes: ["products"],
   endpoints: (builder) => ({
     getAllProduct: builder.query<ProductResponse, ProductParams>({
-      query: ({ page }) => ({
+      query: ({ page, category }) => ({
         url: "/",
         params: {
           page,
+          category,
         },
       }),
     }),

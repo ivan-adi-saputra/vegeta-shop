@@ -1,6 +1,7 @@
 import Response from "@/lib/api.response";
 import { prisma } from "@/lib/prisma";
 import { NextRequest } from "next/server";
+import { ProductCategory } from "@prisma/client";
 
 export async function GET(req: NextRequest) {
   try {
@@ -10,11 +11,25 @@ export async function GET(req: NextRequest) {
       ? parseInt(query.get("page") as string) - 1
       : 0;
     const skip = take * page;
+    const categories = query.get("category")?.split(",") || undefined;
+    console.log("backend");
+    console.log(categories);
+
+    const queryCondition = {
+      AND: [
+        {
+          category: {
+            in: categories as ProductCategory[],
+          },
+        },
+      ],
+    };
 
     const totalProducts = await prisma.product.count();
     const products = await prisma.product.findMany({
       take,
       skip,
+      where: queryCondition,
     });
 
     return Response({
