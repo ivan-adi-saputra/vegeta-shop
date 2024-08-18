@@ -12,8 +12,12 @@ export async function GET(req: NextRequest) {
       : 0;
     const skip = take * page;
     const categories = query.get("category")?.split(",") || undefined;
-    console.log("backend");
-    console.log(categories);
+    const min_price = query.get("min_price")
+      ? parseInt(query.get("min_price") as string)
+      : undefined;
+    const max_price = query.get("max_price")
+      ? parseInt(query.get("max_price") as string)
+      : undefined;
 
     const queryCondition = {
       AND: [
@@ -21,11 +25,15 @@ export async function GET(req: NextRequest) {
           category: {
             in: categories as ProductCategory[],
           },
+          price: {
+            gte: min_price,
+            lte: max_price,
+          },
         },
       ],
     };
 
-    const totalProducts = await prisma.product.count();
+    const totalProducts = await prisma.product.count({ where: queryCondition });
     const products = await prisma.product.findMany({
       take,
       skip,

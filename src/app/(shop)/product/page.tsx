@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 // components
 import FilterCategory from "@/components/filter/filter-category";
@@ -39,22 +39,20 @@ export default function Products() {
   const { data, isLoading } = useGetAllProductQuery({
     page: searchParams.get("page") || undefined,
     category: searchParams.get("category") || undefined,
+    min_price: searchParams.get("min_price") || undefined,
+    max_price: searchParams.get("max_price") || undefined,
   });
   const { data: recomendedProduct, isLoading: recomendedLoading } =
     useGetAllProductQuery({ page: pageUndefined });
 
   const handleChangeFilter = (key: string, value: string) => {
-    console.log(value);
     const newQuery: Record<string, string> = {};
     searchParams.forEach((param, key) => {
       newQuery[key] = param;
     });
     newQuery[key] = value;
 
-    console.log("newQuery");
-    console.log(newQuery);
     const urlParams = new URLSearchParams(newQuery).toString();
-    console.log(urlParams);
     router.replace(`/product?${urlParams}`);
   };
 
@@ -75,7 +73,25 @@ export default function Products() {
             }
           />
           <div className="w-full separator my-4" />
-          <FilterPrice />
+          <FilterPrice
+            value={{
+              min: searchParams.get("min_price")
+                ? parseInt(searchParams.get("min_price") as string)
+                : undefined,
+              max: searchParams.get("max_price")
+                ? parseInt(searchParams.get("max_price") as string)
+                : undefined,
+            }}
+            onChange={(price) => {
+              if (
+                price.min !== parseInt(searchParams.get("min_price") as string)
+              ) {
+                handleChangeFilter("min_price", `${price.min}`);
+              } else {
+                handleChangeFilter("max_price", `${price.max}`);
+              }
+            }}
+          />
           <div className="w-full separator my-4" />
           <FilterRating />
         </div>
