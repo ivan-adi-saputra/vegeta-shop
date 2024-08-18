@@ -14,6 +14,7 @@ interface ProductParams {
   category?: string | undefined;
   min_price?: string | undefined;
   max_price?: string | undefined;
+  rating?: string | undefined;
 }
 
 export const productApi = createApi({
@@ -24,13 +25,14 @@ export const productApi = createApi({
   tagTypes: ["products"],
   endpoints: (builder) => ({
     getAllProduct: builder.query<ProductResponse, ProductParams>({
-      query: ({ page, category, min_price, max_price }) => ({
+      query: ({ page, category, min_price, max_price, rating }) => ({
         url: "/",
         params: {
           page,
           category,
           min_price,
           max_price,
+          rating,
         },
       }),
     }),
