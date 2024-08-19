@@ -9,6 +9,10 @@ interface ProductResponse extends BaseResponse {
   };
 }
 
+interface ProductByIdResponse extends BaseResponse {
+  data: Product;
+}
+
 interface ProductParams {
   page?: string | undefined;
   category?: string | undefined;
@@ -36,7 +40,15 @@ export const productApi = createApi({
         },
       }),
     }),
+    getProductById: builder.query<ProductByIdResponse, string>({
+      query: (id) => ({
+        url: `/${id}`,
+        params: {
+          id,
+        },
+      }),
+    }),
   }),
 });
 
-export const { useGetAllProductQuery } = productApi;
+export const { useGetAllProductQuery, useGetProductByIdQuery } = productApi;
