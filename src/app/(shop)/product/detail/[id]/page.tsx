@@ -17,15 +17,47 @@ import {
 // utils
 import { cn, formatNumber } from "@/lib/utils";
 import { hover } from "@/lib/hover";
+import { useCheckoutMutation } from "@/services/transaction";
+import { useSession } from "next-auth/react";
+import { useToast } from "@/components/ui/use-toast";
 
 export default function Products({ params }: { params: { id: string } }) {
   const router = useRouter();
   const [itemCount, setItemCount] = useState(1);
+  const { data: session } = useSession();
+  const { toast } = useToast();
 
   const { data: productDetails } = useGetProductByIdQuery(params.id);
   const { data: recommendedProducts } = useGetAllProductQuery({
     page: undefined,
   });
+
+  const [mutateCheckout, { isError, error }] = useCheckoutMutation();
+
+  const handleCheckout = async () => {
+    if (!session?.user) {
+      toast({
+        title: "Login Required",
+        variant: "destructive",
+      });
+      router.push("/auth/signin");
+      return;
+    }
+
+    const data = {
+      product_id: params.id,
+      qty: itemCount,
+    };
+
+    const res = await mutateCheckout(data);
+    router.push("/checkout");
+    console.log("isError");
+    console.log(isError);
+    console.log("error");
+    console.log(error);
+    console.log("res");
+    console.log(res);
+  };
 
   return (
     <main className="flex flex-col w-full min-h-screen items-center pb-8">
@@ -71,6 +103,7 @@ export default function Products({ params }: { params: { id: string } }) {
                 "py-1 px-4 bg-leaf text-white leading-4",
                 hover.shadow
               )}
+              onClick={handleCheckout}
             >
               <IconCart className="w-5 h-5 mr-2" />
               Masukkan Keranjang
@@ -80,9 +113,7 @@ export default function Products({ params }: { params: { id: string } }) {
                 "py-1 px-4 bg-carrot text-white leading-4",
                 hover.shadow
               )}
-              onClick={() => {
-                router.push("/checkout");
-              }}
+              onClick={handleCheckout}
             >
               <IconBag className="w-5 h-5 mr-2" />
               Beli Sekarang

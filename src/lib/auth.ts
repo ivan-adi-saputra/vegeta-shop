@@ -50,7 +50,7 @@ export const authOptions: AuthOptions = {
   callbacks: {
     jwt: async ({ token, user }) => {
       if (user) {
-        token.uid = user.id;
+        token.id = user.id;
       }
       return token;
     },
