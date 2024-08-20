@@ -10,8 +10,6 @@ export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
   const user = session?.user;
 
-  console.log("session");
-  console.log(session?.user);
   const payload = await req.json();
   const product = await prisma.product.findFirst({
     where: {
@@ -27,7 +25,6 @@ export async function POST(req: NextRequest) {
   }
 
   const pricePerItem = +product.price;
-  console.log("Price per item:", pricePerItem);
   const checkout = await prisma.checkout.create({
     data: {
       productId: product.id,
@@ -36,8 +33,6 @@ export async function POST(req: NextRequest) {
       pricePerItem: pricePerItem,
     },
   });
-  console.log("checkout");
-  console.log(checkout);
 
   return Response({
     message: "Checkout berhasil",
@@ -51,4 +46,30 @@ export async function POST(req: NextRequest) {
   //     status: 500,
   //   });
   // }
+}
+
+export async function GET(req: NextRequest) {
+  try {
+    const session = await getServerSession(authOptions);
+    const checkouts = await prisma.checkout.findMany({
+      where: {
+        userId: session?.user?.id,
+      },
+      include: {
+        product: true,
+      },
+    });
+
+    return Response({
+      message: "get data checkout",
+      data: checkouts,
+      status: 200,
+    });
+  } catch (error) {
+    return Response({
+      message: "get data checkout gagal",
+      data: error,
+      status: 500,
+    });
+  }
 }

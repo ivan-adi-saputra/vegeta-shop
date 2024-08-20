@@ -1,32 +1,25 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
+import { Product } from "@prisma/client";
 
 // components
 import ProductCheckout from "@/components/product-checkout/product-checkout";
-import { ProductDetails } from "@/components/product/product-card";
 
-function ItemList() {
-  const [products, setProducts] = useState<ProductDetails[]>([
-    {
-      img: "/vegetables.jpeg",
-      price: 40000,
-      rating: 4.9,
-      sold: 40,
-      name: "Kembang Kol",
-      unit: "kg",
-      itemCount: 1,
-    },
-    {
-      img: "/vegetables.jpeg",
-      price: 25000,
-      rating: 4.9,
-      sold: 40,
-      name: "Kentang Gondangdia",
-      unit: "kg",
-      itemCount: 2,
-    },
-  ]);
+interface ProductCheckoutProps {
+  products: {
+    id: string;
+    userId: string;
+    productId: string;
+    qty: number;
+    pricePerItem: number;
+    createdAt: Date;
+    updatedAt: Date;
+    product: Product;
+  }[];
+}
+
+function ItemList({ products = [] }: ProductCheckoutProps) {
   return (
     <>
       <div className="text-lg font-semibold">Barang yang dibeli</div>
@@ -34,17 +27,16 @@ function ItemList() {
       {products.map((product, index) => (
         <ProductCheckout
           key={`productCheckout${index}`}
-          productDetails={product}
+          productDetails={product.product}
           onDeleteItem={() => {
             const updatedProducts = [...products];
             updatedProducts.splice(index, 1);
-            setProducts(updatedProducts);
           }}
           onChangeItemCount={(count) => {
             const updatedProducts = [...products];
-            updatedProducts[index].itemCount = count;
-            setProducts(updatedProducts);
+            updatedProducts[index].qty = count;
           }}
+          qty={product.qty}
         />
       ))}
     </>

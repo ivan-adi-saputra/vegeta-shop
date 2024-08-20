@@ -16,6 +16,7 @@ interface CheckoutProps {
   productDetails: ProductDetails;
   onChangeItemCount: (count: number) => void;
   onDeleteItem: () => void;
+  qty: number;
 }
 
 const ProductCheckout: React.FC<CheckoutProps> = ({
@@ -23,8 +24,9 @@ const ProductCheckout: React.FC<CheckoutProps> = ({
   productDetails,
   onDeleteItem,
   onChangeItemCount,
+  qty,
 }: CheckoutProps) => {
-  const [itemCount, setItemCount] = useState(productDetails.itemCount || 1);
+  const [itemCount, setItemCount] = useState(qty || 1);
 
   return (
     <>
