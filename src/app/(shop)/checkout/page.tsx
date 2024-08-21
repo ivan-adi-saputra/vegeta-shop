@@ -12,15 +12,22 @@ import { cn, formatNumber } from "@/lib/utils";
 import { hover } from "@/lib/hover";
 
 // redux
-import { useCheckoutsQuery } from "@/services/transaction";
+import { useCheckoutsQuery, usePaymentMutation } from "@/services/transaction";
 
 import { DeliveryMethod } from "@/types/delivery-methods";
+
+import { useToast } from "@/components/ui/use-toast";
+import { useRouter } from "next/navigation";
 
 export default function Checkout() {
   const [deliveryMethod, setDeliveryMethod] =
     useState<DeliveryMethod>("HOME_DELIVERY");
 
+  const { toast } = useToast();
+  const router = useRouter();
+
   const { data } = useCheckoutsQuery();
+  const [mutatePayment] = usePaymentMutation();
   const products = data?.data || [];
 
   const totalPrice = products.reduce(
@@ -36,6 +43,30 @@ export default function Checkout() {
   const insurance = deliveryMethod === "HOME_DELIVERY" ? 2000 : 0;
 
   const subtotal = totalPrice + deliveryFee + insurance + applicationFee;
+
+  const handleClick = async () => {
+    try {
+      const data = {
+        application_fee: applicationFee,
+        asurance_fee: insurance,
+        delivery_fee: deliveryFee,
+        delivery_type: deliveryMethod,
+      };
+
+      await mutatePayment(data);
+      toast({
+        title: "Transaction Berhasil",
+        variant: "destructive",
+      });
+
+      router.push("/history");
+    } catch (error) {
+      toast({
+        title: "Transaction Gagal",
+        variant: "destructive",
+      });
+    }
+  };
 
   return (
     <>
@@ -90,11 +121,12 @@ export default function Checkout() {
               </div>
             </div>
             <div className="flex flex-1">
-              <Link className="w-[100%]" href={"/payment"}>
-                <Button className={cn("w-[100%] mt-6 bg-leaf", hover.shadow)}>
-                  Lanjutkan Pembayaran
-                </Button>
-              </Link>
+              <Button
+                onClick={handleClick}
+                className={cn("w-[100%] mt-6 bg-leaf", hover.shadow)}
+              >
+                Lanjutkan Pembayaran
+              </Button>
             </div>
           </div>
         </div>

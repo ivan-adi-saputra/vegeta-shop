@@ -51,12 +51,6 @@ export default function Products({ params }: { params: { id: string } }) {
 
     const res = await mutateCheckout(data);
     router.push("/checkout");
-    console.log("isError");
-    console.log(isError);
-    console.log("error");
-    console.log(error);
-    console.log("res");
-    console.log(res);
   };
 
   return (
