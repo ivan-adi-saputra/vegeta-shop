@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
     const grandTotalPrice =
       totalPrice +
       payload.application_fee +
-      payload.aasurance_fee +
+      payload.asurance_fee +
       payload.delivery_fee;
 
     const transaction = await prisma.transaction.create({
@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
         userId: session?.user?.id,
         totalPrice,
         deliveryFee: payload.delivery_fee,
-        asuranceFee: payload.aasurance_fee,
+        asuranceFee: payload.asurance_fee,
         applicationFee: payload.application_fee,
         grandTotalPrice,
         deliveryType: payload.delivery_type,
